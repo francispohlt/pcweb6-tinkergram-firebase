@@ -19,7 +19,7 @@ export default function PostPageHome() {
 
   return (
     <>
-      <Navbar variant="light" bg="light">
+      <Navbar variant="dark" bg="dark">
         <Container>
           <Navbar.Brand href="/">Tinkergram</Navbar.Brand>
           <Nav>

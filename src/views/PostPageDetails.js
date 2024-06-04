@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth"
 import {auth, db, storage} from "../firebase";
-import {signOut} from "firebase/auth";
 import { deleteDoc, doc, getDoc } from "firebase/firestore";
-import {getStorage, ref, deleteObject} from "firebase/storage"
+import {ref, deleteObject} from "firebase/storage"
 import Navigation from "../components/navigation";
 
 export default function PostPageDetails() {

@@ -1,14 +1,29 @@
-import {createUserWithEmailAndPassword} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import {auth} from "../firebase";
+import { auth } from "../firebase";
 
 export default function SignUpPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const getErrorMessage = (errorCode) => {
+    switch (errorCode) {
+      case "auth/email-already-in-use":
+        return "The email address is already in use by another account.";
+      case "auth/invalid-email":
+        return "The email address is not valid.";
+      case "auth/operation-not-allowed":
+        return "Email/password accounts are not enabled.";
+      case "auth/weak-password":
+        return "The password is too weak.";
+      default:
+        return "An unknown error occurred. Please try again.";
+    }
+  };
 
   return (
     <Container>
@@ -37,21 +52,28 @@ export default function SignUpPage() {
           />
           <a href="/login">Have an existing account? Login here.</a>
         </Form.Group>
-        <Button variant="primary"
-        onClick={async (e) => {
+        <Button
+          variant="primary"
+          onClick={async (e) => {
+            e.preventDefault();
             setError("");
             const canSignUp = username && password;
-            if (canSignUp)
-                try {
-                    await createUserWithEmailAndPassword(auth, username, password);
-                    navigate("/");
-                } catch (error) {
-                    setError(error.message);
-                }
-            }}
-        >Sign Up</Button>
+            if (canSignUp) {
+              try {
+                await createUserWithEmailAndPassword(auth, username, password);
+                navigate("/");
+              } catch (error) {
+                setError(getErrorMessage(error.code));
+              }
+            } else {
+              setError("Please fill in all fields.");
+            }
+          }}
+        >
+          Sign Up
+        </Button>
       </Form>
-      <p>{error}</p>
+      <p className="text-danger">{error}</p>
     </Container>
   );
 }
